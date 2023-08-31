@@ -1,17 +1,5 @@
 #include "binary_trees.h"
 
-/**
- * struct node_s - singly linked list
- * @node: const binary tree node
- * @next: points to the next node
- */
-
-typedef struct node_s
-{
-	const binary_tree_t *node;
-	struct node_s *next;
-} mos_node;
-
 mos_node *mos_add_node(mos_node *head, const binary_tree_t *btnode);
 void mos_free(mos_node *head);
 mos_node *mos_get_child(mos_node *head, const binary_tree_t *parent);
