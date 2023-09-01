@@ -1,107 +1,68 @@
 #include "binary_trees.h"
 
-mos_node *mos_add_node(mos_node *head, const binary_tree_t *btnode);
-void mos_free(mos_node *head);
-mos_node *mos_get_child(mos_node *head, const binary_tree_t *parent);
-void mos_call_func(mos_node *head, void (*func)(int));
+/**
+ * binary_tree_is_leaf - checks if a node is a leaf.
+ * @node: pointer to the node to check.
+ * Return: 1 if node is a leaf, otherwise 0.
+ */
+
+int binary_tree_is_leaf(const binary_tree_t *node)
+{
+	if (node && !node->left && !node->right)
+		return (1);
+	return (0);
+}
 
 /**
- * binary_tree_levelorder - Goes through a binary tree
- *                          using level-order traversal.
- * @tree: Pointer to the root node of the tree to traverse.
- * @func: Pointer to a function to call for each node.
+ * binary_tree_height - measures the height of a binary tree.
+ * @tree: pointer to the root node of the tree to measure the height.
+ * Return: height of the tree, if tree is NULL, returns 0.
  */
+
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+	size_t right_height, left_height;
+
+	if (!tree)
+		return (0);
+	right_height = binary_tree_height(tree->right);
+	left_height = binary_tree_height(tree->left);
+	if (right_height >= left_height)
+		return (1 + right_height);
+	return (1 + left_height);
+}
+
+/**
+* mos_levelorder_aux - goes through a binary tree using level-order traversal.
+* @tree: pointer to the root node of the tree to traverse.
+* @level: level to goes through.
+* @func: pointer to a function to call for each node.
+*/
+
+void mos_levelorder_aux(const binary_tree_t *tree,
+		size_t level, void (*func)(int))
+{
+	if (!tree)
+		return;
+	if (!level)
+		func(tree->n);
+	mos_levelorder_aux(tree->left, level - 1, func);
+	mos_levelorder_aux(tree->right, level - 1, func);
+}
+
+/**
+* binary_tree_levelorder - goes through a binary tree using level-order.
+* @tree: pointer to the root node of the tree to traverse.
+* @func: pointer to a function to call for each node.
+*/
 
 void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 {
-	mos_node *xxx = NULL;
+	size_t a;
 
-	func(tree->n);
-	xxx = mos_get_child(xxx, tree);
-	mos_call_func(xxx, func);
-
-	mos_free(xxx);
-}
-
-/**
- * mos_call_func - Calls func on all nodes at each level.
- * @head: Pointer to head of linked list with nodes at one level.
- * @func: Pointer to a function to call for each node.
- */
-
-void mos_call_func(mos_node *head, void (*func)(int))
-{
-	mos_node *xxx = NULL, *curr = NULL;
-
-	if (!head)
+	if (!tree || !func)
 		return;
-	for (curr = head; curr != NULL; curr = curr->next)
-	{
-		func(curr->node->n);
-		xxx = mos_get_child(xxx, curr->node);
-	}
-	mos_call_func(xxx, func);
-	mos_free(xxx);
-}
 
-/**
- * mos_get_child - appends children of parent to linked list.
- * @head: Pointer to head of linked list where children will be appended.
- * @parent: Pointer to node whose children we want to append.
- * Return: Pointer to head of linked list of children.
- */
-
-mos_node *mos_get_child(mos_node *head, const binary_tree_t *parent)
-{
-	if (parent->left)
-		head = mos_add_node(head, parent->left);
-	if (parent->right)
-		head = mos_add_node(head, parent->right);
-	return (head);
-}
-
-/**
- * mos_add_node - adds a new node at the end of a linkedlist
- * @head: pointer to head of linked list
- * @btnode: const binary tree node to append
- * Return: pointer to head, or NULL on failure
- */
-
-mos_node *mos_add_node(mos_node *head, const binary_tree_t *btnode)
-{
-	mos_node *xx = NULL, *a = NULL;
-
-	xx = malloc(sizeof(*xx));
-	if (xx)
-	{
-		xx->node = btnode;
-		xx->next = NULL;
-		if (!head)
-			head = xx;
-		else
-		{
-			a = head;
-			while (a->next)
-				a = a->next;
-			a->next = xx;
-		}
-	}
-	return (head);
-}
-
-/**
- * mos_free - frees all the nodes in a linked list
- * @head: pointer to the head of list_t linked list
- */
-
-void mos_free(mos_node *head)
-{
-	mos_node *a = NULL;
-
-	while (head)
-	{
-		a = head->next;
-		free(head);
-		head = a;
-	}
+	for (a = 0; a < binary_tree_height(tree); a++)
+		mos_levelorder_aux(tree, a, func);
 }
