@@ -1,12 +1,12 @@
 #include "binary_trees.h"
 
 /**
- * mos_tree_size - measures the sum of heights of a binary tree
+ * mos_tree_size1 - measures the sum of heights of a binary tree
  * @tree: pointer to the root node of the tree to measure the height
  * Return: Height or 0 if tree is NULL
  */
 
-size_t mos_tree_size(const binary_tree_t *tree)
+size_t mos_tree_size1(const binary_tree_t *tree)
 {
 	size_t x1 = 0;
 	size_t x2 = 0;
@@ -15,10 +15,10 @@ size_t mos_tree_size(const binary_tree_t *tree)
 		return (0);
 
 	if (tree->left)
-		x1 = 1 + mos_tree_size(tree->left);
+		x1 = 1 + mos_tree_size1(tree->left);
 
 	if (tree->right)
-		x2 = 1 + mos_tree_size(tree->right);
+		x2 = 1 + mos_tree_size1(tree->right);
 
 	return (x1 + x2);
 }
@@ -38,7 +38,7 @@ int *heap_to_sorted_array(heap_t *heap, size_t *size)
 	if (!heap || !size)
 		return (NULL);
 
-	*size = mos_tree_size(heap) + 1;
+	*size = mos_tree_size1(heap) + 1;
 
 	x = malloc(sizeof(int) * (*size));
 
